@@ -1111,6 +1111,7 @@
       1000, "#006837"
     ],
     "fill-opacity": 0.75
+    }
   },
     {"id": "CTOUTLINE", "type": "line", "source": "CT"},
     {
