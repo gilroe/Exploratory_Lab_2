@@ -54,7 +54,7 @@
 
   // Show all buildings in their original style
   function showAllrestaurants() {
-    map.setFilter('ubc', null);
+    map.setFilter('REST', null);
   }
 
   // Highlight buildings whose names contain the search text
@@ -66,21 +66,21 @@
       return;
     }
 
-    map.setFilter('ubc', [
+    map.setFilter('REST', [
       'match',
-      ['to-string', ['get', 'BLDG_USAGE']],
+      ['to-string', ['get', 'Business Name']],
       [''],
       false,
       true
     ]);
 
     // Filter names using a case-insensitive substring match
-    map.setFilter('ubc', [
+    map.setFilter('REST', [
       'case',
       [
         '!=',
         ['index-of', searchText.toLowerCase(),
-          ['downcase', ['to-string', ['get', 'BLDG_USAGE']]]
+          ['downcase', ['to-string', ['get', 'Business Name']]]
         ],
         -1
       ],
