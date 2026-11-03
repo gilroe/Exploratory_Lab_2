@@ -770,12 +770,6 @@
       }
     },
     {
-      "id": "CTcount",
-      "type": "fill",
-      "source": "ctcount",
-      "paint": {"fill-opacity": 0.6, "fill-color": "rgba(13, 75, 158, 1)"}
-    },
-    {
       "id": "place_other",
       "type": "symbol",
       "metadata": {"mapbox:group": "101da9f13b64a08fa4b6ac1168e89e5f"},
@@ -1105,11 +1099,19 @@
       }
     },
     {
-      "id": "CT",
+      "id": "CTcount",
       "type": "fill",
-      "source": "CT",
-      "paint": {"fill-opacity": 0.6, "fill-color": "rgba(13, 75, 158, 1)"}
-    },
+      "source": "ctcount",
+      "paint": {"fill-color": ["step",
+      ["get", "NUMPOINTS"],
+      "#ffffcc",
+      100, "#c2e699",
+      300, "#78c679",
+      500, "#31a354",
+      1000, "#006837"
+    ],
+    "fill-opacity": 0.75
+  },
     {"id": "CTOUTLINE", "type": "line", "source": "CT"},
     {
       "id": "REST",
