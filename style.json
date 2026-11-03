@@ -1118,7 +1118,7 @@
       "id": "REST",
       "type": "circle",
       "source": "REST",
-      "paint": {"circle-opacity": 0.8, "circle-color": "rgba(27, 110, 8, 1)"}
+      "paint": {"circle-opacity": 0.8, "circle-color": "rgba(188, 127, 0, 1)"}
     }
   ],
   "id": "positron"
