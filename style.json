@@ -1113,7 +1113,7 @@
     "fill-opacity": 0.75
     }
   },
-    {"id": "CTOUTLINE", "type": "line", "source": "CT"},
+    {"id": "CTOUTLINE", "type": "line", "source": "ctcount"},
     {
       "id": "REST",
       "type": "circle",
