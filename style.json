@@ -28,6 +28,9 @@
     "REST": {
       "type": "geojson",
       "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/main/vancouver_storefronts.geojson?utm_source=chatgpt.com"
+      "cluster": true,
+      "clusterRadius": 50,
+      "clusterMaxZoom": 11
     },
     "CT": {
       "type": "geojson",
