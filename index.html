@@ -48,8 +48,8 @@
     'highlightrestaurantsButton'
   );
 
-  const buildingInput = document.getElementById(
-    'highlightrestuarantsTextEntry'
+  const textInput = document.getElementById(
+    'highlightrestaurantsTextEntry'
   );
 
   // Show all buildings in their original style
@@ -59,7 +59,7 @@
 
   // Highlight buildings whose names contain the search text
   function highlightrestaurants() {
-    const searchText = buildingInput.value.trim();
+    const searchText = textInput.value.trim();
 
     if (!searchText) {
       showAllrestaurants();
