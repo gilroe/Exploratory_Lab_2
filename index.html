@@ -60,7 +60,7 @@ function onEachREST(e) {
 
   if (RESTName) {
     const popupText = RESTName
-      ? `${RESTName}`;
+      ? `${RESTName}`: RestName;
 
     const popup = new maplibregl.Popup()
       .setLngLat(e.lngLat)
