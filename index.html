@@ -49,16 +49,30 @@
       });
     });
 function onEachREST(e) {
-  const REST = e.features[0].properties;
-  const RESTName = REST["Business Name"];  
 
-  if (RESTName) {
-    const popupText = RESTName;
-    const popup = new maplibregl.Popup()
-      .setLngLat(e.lngLat)
-      .setText(String(popupText))
-      .addTo(map);
-  }
+  const clickedCoordinates = e.features[0].geometry.coordinates;
+
+  const allBusinesses = map.querySourceFeatures('REST', {
+    filter: [
+      '==',
+      '$type',
+      'Point'
+    ]
+  });
+
+  const popupText = allBusinesses
+    .filter(feature =>
+      feature.geometry.coordinates[0] === clickedCoordinates[0] &&
+      feature.geometry.coordinates[1] === clickedCoordinates[1]
+    )
+    .map(feature => feature.properties['Business Name'])
+    .filter(name => name);
+
+  const popup = new maplibregl.Popup()
+    .setLngLat(e.lngLat)
+    .setText(popupText.join('\n'))
+    .addTo(map);
+}
 }
     map.on('load', function () {
   const showAllButton = document.getElementById(
