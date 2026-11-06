@@ -1127,44 +1127,44 @@
     "circle-color": "rgba(188, 127, 0, 1)",
     "circle-radius": 5
   }
-}
-{
-  "id": "restaurant-clusters",
-  "type": "circle",
-  "source": "REST",
-  "filter": ["has", "point_count"],
-  "paint": {
-    "circle-color": [
-      "step",
-      ["get", "point_count"],
-      "#a1d99b",
-      25, "#41ab5d",
-      100, "#006d2c"
-    ],
-    "circle-radius": [
-      "step",
-      ["get", "point_count"],
-      14,
-      25, 20,
-      100, 28
-    ],
-    "circle-stroke-width": 1.5,
-    "circle-stroke-color": "#ffffff"
-  }
-}
-{
-  "id": "restaurant-cluster-count",
-  "type": "symbol",
-  "source": "REST",
-  "filter": ["has", "point_count"],
-  "layout": {
-    "text-field": ["get", "point_count_abbreviated"],
-    "text-size": 12
+},
+  {
+    "id": "restaurant-clusters",
+    "type": "circle",
+    "source": "REST",
+    "filter": ["has", "point_count"],
+    "paint": {
+      "circle-color": [
+        "step",
+        ["get", "point_count"],
+        "#a1d99b",
+        25, "#41ab5d",
+        100, "#006d2c"
+      ],
+      "circle-radius": [
+        "step",
+        ["get", "point_count"],
+        14,
+        25, 20,
+        100, 28
+      ],
+      "circle-stroke-width": 1.5,
+      "circle-stroke-color": "#ffffff"
+    }
   },
-  "paint": {
-    "text-color": "#ffffff"
+  {
+    "id": "restaurant-cluster-count",
+    "type": "symbol",
+    "source": "REST",
+    "filter": ["has", "point_count"],
+    "layout": {
+      "text-field": ["get", "point_count_abbreviated"],
+      "text-size": 12
+    },
+    "paint": {
+      "text-color": "#ffffff"
+    }
   }
-}
   ],
   "id": "positron"
 }
