@@ -47,55 +47,18 @@
         map.getCanvas().style.cursor = '';
       });
     });
+function onEachREST(e) {
+  const REST = e.features[0].properties;
+  const RESTName = REST["Business Name"];  
 
-// Store all businesses from the GeoJSON file
-var businessesByLocation = {};
-
-fetch('https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/main/vancouver_storefronts.geojson')
-  .then(response => response.json())
-  .then(data => {
-
-    // Group businesses by their coordinates
-    data.features.forEach(feature => {
-      const coordinates = feature.geometry.coordinates;
-      const locationKey = coordinates[0].toFixed(7) + ',' + coordinates[1].toFixed(7);
-
-      if (!businessesByLocation[locationKey]) {
-        businessesByLocation[locationKey] = [];
-      }
-
-      businessesByLocation[locationKey].push(
-        feature.properties['Business Name']
-      );
-    });
-
-  });
-
-// Display all business names when a point is clicked
-map.on('click', 'REST', function (e) {
-
-  const coordinates = e.features[0].geometry.coordinates;
-
-  const locationKey = coordinates[0].toFixed(7) + ',' + coordinates[1].toFixed(7);
-
-  const businesses = businessesByLocation[locationKey] || [];
-
-  const popupContent = document.createElement('div');
-  const list = document.createElement('ul');
-
-  businesses.forEach(name => {
-    const item = document.createElement('li');
-    item.textContent = name || 'Unknown business';
-    list.appendChild(item);
-  });
-
-  popupContent.appendChild(list);
-
-  new maplibregl.Popup()
-    .setLngLat(e.lngLat)
-    .setDOMContent(popupContent)
-    .addTo(map);
-});
+  if (RESTName) {
+    const popupText = RESTName;
+    const popup = new maplibregl.Popup()
+      .setLngLat(e.lngLat)
+      .setText(String(popupText))
+      .addTo(map);
+  }
+}
     map.on('load', function () {
   const showAllButton = document.getElementById(
     'showAllButton'
