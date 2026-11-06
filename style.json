@@ -25,10 +25,13 @@
       "type": "vector",
       "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=91v8GdkhoZl513qHt6P8"
     },
-    "REST": {
-      "type": "geojson",
-      "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/main/vancouver_storefronts.geojson?utm_source=chatgpt.com"
-    },
+"REST": {
+  "type": "geojson",
+  "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/main/vancouver_storefronts.geojson",
+  "cluster": true,
+  "clusterMaxZoom": 14,
+  "clusterRadius": 50
+},
     "CT": {
       "type": "geojson",
       "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/local-area-boundary.geojson"
@@ -1115,11 +1118,53 @@
   },
     {"id": "CTOUTLINE", "type": "line", "source": "ctcount"},
     {
-      "id": "REST",
-      "type": "circle",
-      "source": "REST",
-      "paint": {"circle-opacity": 0.8, "circle-color": "rgba(188, 127, 0, 1)"}
-    }
+  "id": "REST",
+  "type": "circle",
+  "source": "REST",
+  "filter": ["!", ["has", "point_count"]],
+  "paint": {
+    "circle-opacity": 0.8,
+    "circle-color": "rgba(188, 127, 0, 1)",
+    "circle-radius": 5
+  }
+}
+{
+  "id": "restaurant-clusters",
+  "type": "circle",
+  "source": "REST",
+  "filter": ["has", "point_count"],
+  "paint": {
+    "circle-color": [
+      "step",
+      ["get", "point_count"],
+      "#a1d99b",
+      25, "#41ab5d",
+      100, "#006d2c"
+    ],
+    "circle-radius": [
+      "step",
+      ["get", "point_count"],
+      14,
+      25, 20,
+      100, 28
+    ],
+    "circle-stroke-width": 1.5,
+    "circle-stroke-color": "#ffffff"
+  }
+}
+{
+  "id": "restaurant-cluster-count",
+  "type": "symbol",
+  "source": "REST",
+  "filter": ["has", "point_count"],
+  "layout": {
+    "text-field": ["get", "point_count_abbreviated"],
+    "text-size": 12
+  },
+  "paint": {
+    "text-color": "#ffffff"
+  }
+}
   ],
   "id": "positron"
 }
