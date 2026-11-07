@@ -70,7 +70,7 @@ function onEachREST(e) {
 
   const popup = new maplibregl.Popup()
     .setLngLat(e.lngLat)
-    .setText(popupText.join('\n'))
+    .setText(popupText.join(', '))
     .addTo(map);
 }
     map.on('load', function () {
