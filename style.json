@@ -27,7 +27,7 @@
     },
 "REST": {
   "type": "geojson",
-  "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/storefronts-inventory.geojson",
+  "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/restreal.geojson",
   "cluster": true,
   "clusterMaxZoom": 14,
   "clusterRadius": 50
