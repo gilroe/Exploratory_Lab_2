@@ -32,6 +32,10 @@
   "clusterMaxZoom": 10,
   "clusterRadius": 50
 },
+"RESTREAL": {
+  "type": "geojson",
+  "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/restreal.geojson",
+},
     "CT": {
       "type": "geojson",
       "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/local-area-boundary.geojson"
@@ -1117,7 +1121,17 @@
     }
   },
     {"id": "CTOUTLINE", "type": "line", "source": "ctcount"},
-    {
+{
+  "id": "RESTREAL",
+  "type": "circle",
+  "source": "RESTREAL",
+  "paint": {
+    "circle-opacity": 0.8,
+    "circle-color": "rgba(188, 127, 0, 1)",
+    "circle-radius": 5
+  }
+},
+{
   "id": "REST",
   "type": "circle",
   "source": "REST",
