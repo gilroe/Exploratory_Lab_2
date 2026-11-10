@@ -156,13 +156,11 @@
 
 
         // Find matching restaurants in the full dataset
-        const matchingRestaurants = allRestaurants.filter(feature =>
+        const matchingRestaurants = map.querySourceFeatures('RESTREAL').filter(feature =>
 
-          feature.properties['Business Name'] &&
+        feature.properties['Business Name'] &&
 
-          String(feature.properties['Business Name'])
-            .toLowerCase()
-            .includes(searchText)
+        String(feature.properties['Business Name']).toLowerCase().includes(searchText)
 
         );
 
