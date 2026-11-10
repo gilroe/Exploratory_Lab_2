@@ -91,47 +91,26 @@ function onEachREST(e) {
   // Show all buildings in their original style
 function showAllrestaurants() {
   map.setFilter('REST', null);
-
-  // Bring back the restaurant clusters
-  if (map.getLayer('restaurant-clusters')) {
-    map.setLayoutProperty('restaurant-clusters', 'visibility', 'visible');
-  }
-
-  if (map.getLayer('restaurant-cluster-count')) {
-    map.setLayoutProperty('restaurant-cluster-count', 'visibility', 'visible');
-  }
 }
 
-  // Highlight buildings whose names contain the search text
 function highlightrestaurants() {
-  const searchText = textInput.value.trim().toLowerCase();
+  const searchText = textInput.value.trim();
 
   if (!searchText) {
     showAllrestaurants();
     return;
   }
 
-  // Hide the restaurant clusters
-  if (map.getLayer('restaurant-clusters')) {
-    map.setLayoutProperty('restaurant-clusters', 'visibility', 'none');
-  }
-
-  if (map.getLayer('restaurant-cluster-count')) {
-    map.setLayoutProperty('restaurant-cluster-count', 'visibility', 'none');
-  }
-
-  // Show only restaurants matching the search
   map.setFilter('REST', [
     '!=',
     -1,
     [
       'index-of',
-      searchText,
+      searchText.toLowerCase(),
       ['downcase', ['to-string', ['get', 'Business Name']]]
     ]
   ]);
 }
-
   showAllButton.addEventListener('click', showAllrestaurants);
   highlightButton.addEventListener('click', highlightrestaurants);
 
