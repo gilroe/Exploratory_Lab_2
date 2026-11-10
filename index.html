@@ -3,159 +3,251 @@
 <head>
   <meta charset="utf-8">
   <title>My map</title>
+
   <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
-  <style> body { margin: 0; } #map { position: absolute; inset: 0; } </style>
+
+  <style>
+    body {
+      margin: 0;
+    }
+
+    #map {
+      position: absolute;
+      inset: 0;
+    }
+  </style>
 </head>
+
 <body>
+
   <div id="map"></div>
+
   <div id="controls" style="
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  z-index: 1;
-  background: white;
-  padding: 12px;
-  border-radius: 5px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-">
-  <button id="showAllButton">Show All Storefronts</button>
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 1;
+    background: white;
+    padding: 12px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  ">
 
-  <span style="display: inline-block; width: 15px;"></span>
+    <button id="showAllButton">Show All Storefronts</button>
 
-  <input
-    type="text"
-    id="highlightrestaurantsTextEntry"
-    placeholder="e.g. A1B 2C3"
-  >
+    <span style="display: inline-block; width: 15px;"></span>
 
-  <button id="highlightrestaurantsButton">Highlight Storefront</button>
-</div>
+    <input
+      type="text"
+      id="highlightrestaurantsTextEntry"
+      placeholder="Enter business name"
+    >
+
+    <button id="highlightrestaurantsButton">Highlight Storefront</button>
+
+  </div>
+
   <script>
+
+    // Variables used for searching
     var searchPopup = null;
-    
+
+    // Create the map
     const map = new maplibregl.Map({
       container: 'map',
-      style: 'style.json',        // the file you downloaded from Maputnik
-      center: [-123.10, 49.26],    // longitude, latitude
+      style: 'style.json',
+      center: [-123.10, 49.26],
       zoom: 11
     });
+
     map.addControl(new maplibregl.NavigationControl());
-      map.on('load', () => {
+
+
+    // Load map interactions
+    map.on('load', () => {
+
+      // Click on a restaurant in the normal map
       map.on('click', 'REST', onEachREST);
+
       map.on('mouseenter', 'REST', () => {
         map.getCanvas().style.cursor = 'pointer';
       });
+
       map.on('mouseleave', 'REST', () => {
         map.getCanvas().style.cursor = '';
       });
+
     });
-function onEachREST(e) {
 
-  const clickedCoordinates = e.features[0].geometry.coordinates;
 
-  const allBusinesses = map.querySourceFeatures('REST', {
-    filter: [
-      '==',
-      '$type',
-      'Point'
-    ]
-  });
+    // Popup when clicking a restaurant in the normal map
+    function onEachREST(e) {
 
- const popupText = [...new Set(
-  allBusinesses
-    .filter(feature =>
-      feature.geometry.coordinates[0] === clickedCoordinates[0] &&
-      feature.geometry.coordinates[1] === clickedCoordinates[1]
-    )
-    .map(feature => feature.properties['Business Name'])
-    .filter(name => name)
-)];
+      const clickedCoordinates = e.features[0].geometry.coordinates;
 
-  const popup = new maplibregl.Popup()
-    .setLngLat(e.lngLat)
-    .setText(popupText.join(', '))
-    .addTo(map);
-}
-    map.on('load', function () {
-  const showAllButton = document.getElementById(
-    'showAllButton'
-  );
+      const allBusinesses = map.querySourceFeatures('REST', {
+        filter: [
+          '==',
+          '$type',
+          'Point'
+        ]
+      });
 
-  const highlightButton = document.getElementById(
-    'highlightrestaurantsButton'
-  );
+      const popupText = [...new Set(
+        allBusinesses
+          .filter(feature =>
+            feature.geometry.coordinates[0] === clickedCoordinates[0] &&
+            feature.geometry.coordinates[1] === clickedCoordinates[1]
+          )
+          .map(feature => feature.properties['Business Name'])
+          .filter(name => name)
+      )];
 
-  const textInput = document.getElementById(
-    'highlightrestaurantsTextEntry'
-  );
+      new maplibregl.Popup()
+        .setLngLat(e.lngLat)
+        .setText(popupText.join(', '))
+        .addTo(map);
 
-  // Show all buildings in their original style
-function showAllrestaurants() {
-  map.setFilter('REST', null);
-
-  // Remove the search popup
-  if (searchPopup) {
-    searchPopup.remove();
-    searchPopup = null;
-  }
-}
-
-function highlightrestaurants() {
-  const searchText = textInput.value.trim().toLowerCase();
-
-  if (!searchText) {
-    showAllrestaurants();
-    return;
-  }
-
-  // Find restaurants matching the search
-  const matchingRestaurants = map.querySourceFeatures('RESTREAL')
-    .filter(feature =>
-      feature.properties['Business Name'] &&
-      feature.properties['Business Name'].toLowerCase().includes(searchText)
-    );
-
-  // Filter the map to show matching restaurants
-  map.setFilter('RESTREAL', [
-    '!=',
-    -1,
-    [
-      'index-of',
-      searchText,
-      ['downcase', ['to-string', ['get', 'Business Name']]]
-    ]
-  ]);
-
-  // Zoom to the first matching restaurant
-  if (matchingRestaurants.length > 0) {
-    const coordinates = matchingRestaurants[0].geometry.coordinates;
-
-    map.flyTo({
-      center: coordinates,
-      zoom: 16,
-      speed: 1.2
-    });
-  }
-
-  // Create a popup for every matching restaurant
-  matchingRestaurants.forEach(restaurant => {
-  searchPopup = new maplibregl.Popup()
-    .setLngLat(coordinates)
-    .setText(restaurantNames.join(' | '))
-    .addTo(map);
-  });
-}
-  showAllButton.addEventListener('click', showAllrestaurants);
-  highlightButton.addEventListener('click', highlightrestaurants);
-
-  // Allow Enter to run the search
-  textInput.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-      highlightrestaurants();
     }
-  });
-});
+
+
+    // Search functionality
+    map.on('load', async function () {
+
+      const showAllButton = document.getElementById('showAllButton');
+
+      const highlightButton = document.getElementById('highlightrestaurantsButton');
+
+      const textInput = document.getElementById('highlightrestaurantsTextEntry');
+
+
+      // Show all storefronts again
+      function showAllrestaurants() {
+
+        // Show the normal clustered layer
+        map.setLayoutProperty('REST', 'visibility', 'visible');
+
+        // Hide the search layer
+        map.setLayoutProperty('RESTREAL', 'visibility', 'none');
+
+        // Reset the search filter
+        map.setFilter('RESTREAL', null);
+
+        // Remove the search popup
+        if (searchPopup) {
+          searchPopup.remove();
+          searchPopup = null;
+        }
+
+      }
+
+
+      // Search for a storefront
+      function highlightrestaurants() {
+
+        const searchText = textInput.value.trim().toLowerCase();
+
+        // Empty search returns to the original map
+        if (!searchText) {
+          showAllrestaurants();
+          return;
+        }
+
+
+        // Find matching restaurants in the full dataset
+        const matchingRestaurants = allRestaurants.filter(feature =>
+
+          feature.properties['Business Name'] &&
+
+          String(feature.properties['Business Name'])
+            .toLowerCase()
+            .includes(searchText)
+
+        );
+
+
+        // Remove any previous search popup
+        if (searchPopup) {
+          searchPopup.remove();
+          searchPopup = null;
+        }
+
+
+        // Check whether any restaurants matched
+        if (matchingRestaurants.length === 0) {
+
+          alert('No storefronts found.');
+
+          return;
+        }
+
+
+        // Hide the normal clustered restaurant layer
+        map.setLayoutProperty('REST', 'visibility', 'none');
+
+
+        // Show the RESTREAL search layer
+        map.setLayoutProperty('RESTREAL', 'visibility', 'visible');
+
+
+        // Filter RESTREAL to show matching storefronts
+        map.setFilter('RESTREAL', [
+          '!=',
+          -1,
+          [
+            'index-of',
+            searchText,
+            ['downcase', ['to-string', ['get', 'Business Name']]]
+          ]
+        ]);
+
+
+        // Get coordinates of the first matching restaurant
+        const coordinates = matchingRestaurants[0].geometry.coordinates;
+
+
+        // Zoom to the matching restaurant
+        map.flyTo({
+          center: coordinates,
+          zoom: 16,
+          speed: 1.2
+        });
+
+
+        // Collect names of matching restaurants
+        const restaurantNames = matchingRestaurants.map(feature =>
+          feature.properties['Business Name']
+        );
+
+
+        // Create a popup at the first matching location
+        searchPopup = new maplibregl.Popup()
+          .setLngLat(coordinates)
+          .setText(restaurantNames.join(' | '))
+          .addTo(map);
+
+      }
+
+
+      // Connect buttons to functions
+      showAllButton.addEventListener('click', showAllrestaurants);
+
+      highlightButton.addEventListener('click', highlightrestaurants);
+
+
+      // Allow Enter to run the search
+      textInput.addEventListener('keydown', function(event) {
+
+        if (event.key === 'Enter') {
+          highlightrestaurants();
+        }
+
+      });
+
+    });
+
   </script>
+
 </body>
 </html>
