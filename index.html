@@ -3,26 +3,17 @@
 <head>
   <meta charset="utf-8">
   <title>My map</title>
-
   <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
-
   <style>
-    body {
-      margin: 0;
-    }
-
-    #map {
-      position: absolute;
-      inset: 0;
-    }
+    body {margin: 0;}
+    #map { position: absolute;inset: 0; }
   </style>
 </head>
-
 <body>
 
   <div id="map"></div>
-
+<!-- style for buttons/legend -->
   <div id="controls" style="
     position: absolute;
     top: 15px;
@@ -33,25 +24,23 @@
     border-radius: 5px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   ">
-
+<!-- creates showAlldata button -->
     <button id="showAllButton">Show All Storefronts</button>
-
+<!-- creates the highlight text entry box and button -->
     <span style="display: inline-block; width: 15px;"></span>
-
     <input
       type="text"
       id="highlightrestaurantsTextEntry"
       placeholder="Enter business name"
     >
-
     <button id="highlightrestaurantsButton">Highlight Storefront</button>
-
   </div>
 
   <script>
 
-    // Variables used for searching
+    // variable for popup after search
     var searchPopup = null;
+    //variable array, stores restaurant data from geojson
     var allRestaurants = []
     // Create the map
     const map = new maplibregl.Map({
@@ -64,16 +53,16 @@
     map.addControl(new maplibregl.NavigationControl());
 
 
-    // Load map interactions
+    // Load map 
     map.on('load', () => {
 
       // Click on a restaurant in the normal map
       map.on('click', 'REST', onEachREST);
-
+//change cursor when entering circle 'hitbox'
       map.on('mouseenter', 'REST', () => {
         map.getCanvas().style.cursor = 'pointer';
       });
-
+//change cursor back when leaving circle 'hitbox'
       map.on('mouseleave', 'REST', () => {
         map.getCanvas().style.cursor = '';
       });
@@ -81,23 +70,19 @@
     });
 
 
-    // Popup when clicking a restaurant in the normal map
+    // Popup when clicking a restaurant (when all restaruants are shown)
+    //code from class slides
     function onEachREST(e) {
 
       const clickedCoordinates = e.features[0].geometry.coordinates;
-
-      const allBusinesses = map.querySourceFeatures('REST', {
-        filter: [
-          '==',
-          '$type',
-          'Point'
-        ]
+      const allBusinesses = map.querySourceFeatures('REST', {       
+        filter: [ '==', '$type','Point']
       });
 
       const popupText = [...new Set(
         allBusinesses
           .filter(feature =>
-            feature.geometry.coordinates[0] === clickedCoordinates[0] &&
+            feature.geometry.coordinates[0] === clickedCoordinates[0] &&    //groups together businesses with the same coordinates
             feature.geometry.coordinates[1] === clickedCoordinates[1]
           )
           .map(feature => feature.properties['Business Name'])
@@ -106,13 +91,14 @@
 
       new maplibregl.Popup()
         .setLngLat(e.lngLat)
-        .setText(popupText.join(', '))
+        .setText(popupText.join(', '))  //joins busnies with ',' on one popup
         .addTo(map);
 
     }
 
 
-    // Search functionality
+    // Search by restaurant name
+    //code from class slides
     map.on('load', async function () {
 
       const showAllButton = document.getElementById('showAllButton');
@@ -120,26 +106,26 @@
       const highlightButton = document.getElementById('highlightrestaurantsButton');
 
       const textInput = document.getElementById('highlightrestaurantsTextEntry');
-  // Load all storefronts into an array
-  const response = await fetch('https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/restreal.geojson');
+      
+  // loads the storefronts into the variable above
+      const response = await fetch('https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/restreal.geojson');
 
-  const data = await response.json();
+      const data = await response.json();
 
-  allRestaurants = data.features;
-
-      // Show all storefronts again
+      allRestaurants = data.features;
+  
+      // Show all storefronts
+      //code from class slides
       function showAllrestaurants() {
 
-        // Show the normal clustered layer
+        //this allows the clustering layer to be visible and hides the layer used to search restaurants
         map.setLayoutProperty('REST', 'visibility', 'visible');
-
-        // Hide the search layer
         map.setLayoutProperty('RESTREAL', 'visibility', 'none');
 
-        // Reset the search filter
+        // reset search filter
         map.setFilter('RESTREAL', null);
 
-        // Remove the search popup
+        // Remove the popup created by the search
         if (searchPopup) {
           searchPopup.remove();
           searchPopup = null;
@@ -149,54 +135,39 @@
 
 
       // Search for a storefront
+      //code from class slides
       function highlightrestaurants() {
-
         const searchText = textInput.value.trim().toLowerCase();
-
-        // Empty search returns to the original map
+//if nothing in search it shows clustering layer (runs showAllrestaurants)
         if (!searchText) {
           showAllrestaurants();
           return;
         }
 
-
-        // Find matching restaurants in the full dataset
+        // Find matching restaurants in the array of data
         const matchingRestaurants = allRestaurants.filter(feature =>
-
         feature.properties['Business Name'] &&
-
         String(feature.properties['Business Name'])
         .toLowerCase()
         .includes(searchText)
-
         );
 
-
-        // Remove any previous search popup
+        // remove search popup if still there
         if (searchPopup) {
           searchPopup.remove();
           searchPopup = null;
         }
-
-
-        // Check whether any restaurants matched
+        // check if restaurants match (if not github returns message)
         if (matchingRestaurants.length === 0) {
-
           alert('No storefronts found.');
-
           return;
         }
 
-
-        // Hide the normal clustered restaurant layer
+ // reverses the visibility, clustering layer hidden and search layer becomes visible
         map.setLayoutProperty('REST', 'visibility', 'none');
-
-
-        // Show the RESTREAL search layer
         map.setLayoutProperty('RESTREAL', 'visibility', 'visible');
 
-
-        // Filter RESTREAL to show matching storefronts
+        // Filter search layer to show matching storefronts
         map.setFilter('RESTREAL', [
           '!=',
           -1,
@@ -207,51 +178,33 @@
           ]
         ]);
 
-
-        // Get coordinates of the first matching restaurant
+        //collect coordinates of the first matching restaurant and zoom to it
         const coordinates = matchingRestaurants[0].geometry.coordinates;
-
-
-        // Zoom to the matching restaurant
         map.flyTo({
           center: coordinates,
           zoom: 16,
           speed: 1.2
         });
-
-
-        // Collect names of matching restaurants
+        // create a popup of the matching restaurants (all matching restaurants displayed on the popup)
         const restaurantNames = matchingRestaurants.map(feature =>
           feature.properties['Business Name']
         );
-
-
-        // Create a popup at the first matching location
         searchPopup = new maplibregl.Popup()
           .setLngLat(coordinates)
           .setText(restaurantNames.join(' | '))
           .addTo(map);
-
       }
-
-
-      // Connect buttons to functions
+      
+      // click allows button functions to run
       showAllButton.addEventListener('click', showAllrestaurants);
-
       highlightButton.addEventListener('click', highlightrestaurants);
-
-
-      // Allow Enter to run the search
+      // enter allows button functions to run
       textInput.addEventListener('keydown', function(event) {
-
         if (event.key === 'Enter') {
           highlightrestaurants();
         }
-
       });
-
     });
-
   </script>
 
 </body>
