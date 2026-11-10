@@ -29,7 +29,7 @@
   "type": "geojson",
   "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/restreal.geojson",
   "cluster": true,
-  "clusterMaxZoom": 10,
+  "clusterMaxZoom": 12,
   "clusterRadius": 50
 },
 "RESTREAL": {
