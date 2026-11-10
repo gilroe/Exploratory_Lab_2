@@ -25,6 +25,10 @@
       "type": "vector",
       "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=91v8GdkhoZl513qHt6P8"
     },
+"RESTdensity": {
+  "type": "geojson",
+  "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/RESTdensity.geojson"
+}
 "REST": {
   "type": "geojson",
   "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/restreal.geojson",
@@ -1108,14 +1112,14 @@
     {
       "id": "CTcount",
       "type": "fill",
-      "source": "ctcount",
+      "source": "RESTdensity",
       "paint": {"fill-color": ["step",
-      ["get", "NUMPOINTS"],
+      ["get", "rest_per_1000"],
       "#ffffcc",
-      100, "#c2e699",
-      300, "#78c679",
-      500, "#31a354",
-      1000, "#006837"
+      5, "#c2e699",
+      15, "#78c679",
+      25, "#31a354",
+      35, "#006837"
     ],
     "fill-opacity": 0.75
     }
