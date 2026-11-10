@@ -100,16 +100,6 @@ function highlightrestaurants() {
     showAllrestaurants();
     return;
   }
-  // Zoom to the first matching restaurant
-  if (matchingRestaurants.length > 0) {
-    const coordinates = matchingRestaurants[0].geometry.coordinates;
-
-    map.flyTo({
-      center: coordinates,
-      zoom: 16,
-      speed: 1.2
-    });
-  }
 
   // Find restaurants matching the search
   const matchingRestaurants = map.querySourceFeatures('REST')
@@ -128,6 +118,17 @@ function highlightrestaurants() {
       ['downcase', ['to-string', ['get', 'Business Name']]]
     ]
   ]);
+
+  // Zoom to the first matching restaurant
+  if (matchingRestaurants.length > 0) {
+    const coordinates = matchingRestaurants[0].geometry.coordinates;
+
+    map.flyTo({
+      center: coordinates,
+      zoom: 16,
+      speed: 1.2
+    });
+  }
 
   // Create a popup for every matching restaurant
   matchingRestaurants.forEach(restaurant => {
