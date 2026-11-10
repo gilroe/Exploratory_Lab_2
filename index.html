@@ -32,6 +32,7 @@
   <button id="highlightrestaurantsButton">Highlight Storefront</button>
 </div>
   <script>
+    
     const map = new maplibregl.Map({
       container: 'map',
       style: 'style.json',        // the file you downloaded from Maputnik
@@ -91,6 +92,12 @@ function onEachREST(e) {
   // Show all buildings in their original style
 function showAllrestaurants() {
   map.setFilter('REST', null);
+
+  // Remove the search popup
+  if (searchPopup) {
+    searchPopup.remove();
+    searchPopup = null;
+  }
 }
 
 function highlightrestaurants() {
@@ -102,14 +109,14 @@ function highlightrestaurants() {
   }
 
   // Find restaurants matching the search
-  const matchingRestaurants = map.querySourceFeatures('REST')
+  const matchingRestaurants = map.querySourceFeatures('RESTREAL')
     .filter(feature =>
       feature.properties['Business Name'] &&
       feature.properties['Business Name'].toLowerCase().includes(searchText)
     );
 
   // Filter the map to show matching restaurants
-  map.setFilter('REST', [
+  map.setFilter('RESTREAL', [
     '!=',
     -1,
     [
@@ -132,10 +139,10 @@ function highlightrestaurants() {
 
   // Create a popup for every matching restaurant
   matchingRestaurants.forEach(restaurant => {
-    new maplibregl.Popup()
-      .setLngLat(restaurant.geometry.coordinates)
-      .setText(restaurant.properties['Business Name'])
-      .addTo(map);
+  searchPopup = new maplibregl.Popup()
+    .setLngLat(coordinates)
+    .setText(restaurantNames.join(' | '))
+    .addTo(map);
   });
 }
   showAllButton.addEventListener('click', showAllrestaurants);
