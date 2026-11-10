@@ -8,6 +8,19 @@
   <style>
     body {margin: 0;}
     #map { position: absolute;inset: 0; }
+#legend {
+  position: absolute;
+  bottom: 30px;
+  right: 10px;
+  background: white;
+  padding: 12px;
+  border-radius: 5px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.6;
+  z-index: 1;
+}
   </style>
 </head>
 <body>
@@ -36,6 +49,15 @@
     <button id="highlightrestaurantsButton">Highlight Storefront</button>
   </div>
 
+  <div id="legend">
+  <b>Restaurant Density</b><br>
+  Storefronts per 1,000 residents<br><br>
+  <span style="color: #ffffcc;">■</span> 0-4<br>
+  <span style="color: #c2e699",;">■</span> 5-14<br>
+  <span style="color: ##78c679;">■</span> 15-24<br>
+  <span style="color: #31a354;">■</span> 25-34<br>
+  <span style="color: #006837;">■</span> 35+
+</div>
   <script>
 
     // variable for popup after search
