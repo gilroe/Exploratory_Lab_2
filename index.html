@@ -94,22 +94,38 @@ function showAllrestaurants() {
 }
 
 function highlightrestaurants() {
-  const searchText = textInput.value.trim();
+  const searchText = textInput.value.trim().toLowerCase();
 
   if (!searchText) {
     showAllrestaurants();
     return;
   }
 
+  // Find restaurants matching the search
+  const matchingRestaurants = map.querySourceFeatures('REST')
+    .filter(feature =>
+      feature.properties['Business Name'] &&
+      feature.properties['Business Name'].toLowerCase().includes(searchText)
+    );
+
+  // Filter the map to show matching restaurants
   map.setFilter('REST', [
     '!=',
     -1,
     [
       'index-of',
-      searchText.toLowerCase(),
+      searchText,
       ['downcase', ['to-string', ['get', 'Business Name']]]
     ]
   ]);
+
+  // Create a popup for every matching restaurant
+  matchingRestaurants.forEach(restaurant => {
+    new maplibregl.Popup()
+      .setLngLat(restaurant.geometry.coordinates)
+      .setText(restaurant.properties['Business Name'])
+      .addTo(map);
+  });
 }
   showAllButton.addEventListener('click', showAllrestaurants);
   highlightButton.addEventListener('click', highlightrestaurants);
