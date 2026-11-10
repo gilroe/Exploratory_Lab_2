@@ -34,7 +34,7 @@
 },
 "RESTREAL": {
   "type": "geojson",
-  "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/restreal.geojson",
+  "data": "https://raw.githubusercontent.com/gilroe/Exploratory_Lab_2/refs/heads/main/restreal.geojson"
 },
     "CT": {
       "type": "geojson",
