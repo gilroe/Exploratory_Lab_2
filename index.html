@@ -8,6 +8,7 @@
   <style>
     body {margin: 0;}
     #map { position: absolute;inset: 0; }
+  /* css for legend  created in body */
 #legend {
   position: absolute;
   bottom: 30px;
@@ -37,6 +38,8 @@
     border-radius: 5px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   ">
+    <!-- creates title for map -->
+    <h2 style="margin: 0 0 10px 0;"> Vancouver Restaurant Storefronts</h2>
 <!-- creates showAlldata button -->
     <button id="showAllButton">Show All Storefronts</button>
 <!-- creates the highlight text entry box and button -->
@@ -48,13 +51,13 @@
     >
     <button id="highlightrestaurantsButton">Highlight Storefront</button>
   </div>
-
+<!-- creates legend ffor chlorepleth map -->
   <div id="legend">
   <b>Restaurant Density</b><br>
   Storefronts per 1,000 residents<br><br>
   <span style="color: #ffffcc;">■</span> 0-4<br>
   <span style="color: #c2e699",;">■</span> 5-14<br>
-  <span style="color: ##78c679;">■</span> 15-24<br>
+  <span style="color: #78c679;">■</span> 15-24<br>
   <span style="color: #31a354;">■</span> 25-34<br>
   <span style="color: #006837;">■</span> 35+
 </div>
@@ -97,7 +100,7 @@
     function onEachREST(e) {
 
       const clickedCoordinates = e.features[0].geometry.coordinates;
-      const allBusinesses = map.querySourceFeatures('REST', {       
+      const allBusinesses = map.querySourceFeatures('REST', {      
         filter: [ '==', '$type','Point']
       });
 
