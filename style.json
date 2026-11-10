@@ -1125,6 +1125,7 @@
   "id": "RESTREAL",
   "type": "circle",
   "source": "RESTREAL",
+  "layout": {"visibility": "none"},
   "paint": {
     "circle-opacity": 0.8,
     "circle-color": "rgba(188, 127, 0, 1)",
